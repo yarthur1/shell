@@ -50,8 +50,8 @@ do
             do   
                 start=$(date +"%s.%N")
 
-                mysql -h 10.66.125.17 -u root -P 4000 -D livemefinance -e "
-                SELECT sender,sum(sender_price) AS price FROM send_gift_log_all
+                mysql -h 10.66.125.17 -u root -P 4000 -D livemefinance --comments -e "
+                SELECT /*+ READ_FROM_STORAGE(TIFLASH[send_gift_log_all]) */ sender,sum(sender_price) AS price FROM send_gift_log_all
                 WHERE ((date >= '2020-01-01') AND (date <= '2020-12-30')) AND ((mtime >= '2020-"$mon"-01 12:00:00') AND (mtime <= '2020-"$mon"-"$day" 11:59:59')) AND (type IN (0, 2, 3, 7)) AND (gift_id IN (5740, 226, 6013, 8762, 12558, 12557, 5978, 11662, 7721, 6454, 1472, 6439)) AND (alias IN ('us', 'ar', 'liveme', '')) GROUP BY sender ORDER BY price DESC LIMIT 20;
                 " >/dev/null
 
