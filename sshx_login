@@ -1,0 +1,8 @@
+#!/usr/bin/expect
+set ip [lindex $argv 0]
+puts $ip
+set timeout 30
+spawn ssh xxx.yxj@login1.eu13.xx.org
+expect "please enter your password (DomainPassword + 6 characters Token):"
+send "xxx=\r"
+interact

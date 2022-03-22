@@ -1,0 +1,8 @@
+#!/usr/bin/expect
+
+spawn sudo su - serving
+expect "password for xxx.yxj:"
+send "xxx=\r"
+expect "/home/serving"
+send "ssh 1.9.2.6\r"
+interact
