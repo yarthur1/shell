@@ -63,11 +63,15 @@ if [[ ${link_path} != '' ]]; then
     # 如果是物理文件夹或者软链的目录不对，备份
     if [[ ${cur_link_path} != ${link_path} ]]; then
        mv ${dst_path} ${dst_path}.bak
-       ln -s ${link_path} ${dst_path}
+       ln -snf ${link_path} ${dst_path}
     fi
   else
-    ln -s ${link_path} ${dst_path}
+    ln -snf ${link_path} ${dst_path}
   fi
+fi
+
+if [[ $1 == 'mq' ]]; then
+  for i in $(seq 1 11);do rm -rf /data$i/message_queue_server/message_data;done 
 fi
 
 # 检查ibrs是否关闭，开启会影响性能
