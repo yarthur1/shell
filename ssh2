@@ -1,0 +1,14 @@
+#!/bin/bash
+ 
+door_machine=".yxj@login1.eu13.xx.org"
+door_machine=".yxj@login1.et2.xx.org"
+ssh_file=~/.ssh/master-${door_machine}:22
+
+server="11x.9x.22x.16"
+ 
+if [ ! -S "${ssh_file}" ]; then
+    echo "input token:"
+    read token
+fi
+ 
+./sshgo ${door_machine} ${server} ${token}

@@ -24,6 +24,7 @@ if [[ $1 == 'oldb' ]]; then
 fi
 
 if [[ $1 == 'mq' ]]; then
+  # 设置网络端口范围和socket选项
   grep ip_local_port_range /etc/rc.local
   if [ $? -ne 0 ]; then
     echo 'echo "32768   61000" > /proc/sys/net/ipv4/ip_local_port_range' >> /etc/rc.local
@@ -43,13 +44,15 @@ if [[ $1 == 'mq' ]]; then
   if [ $? -ne 0 ]; then
     echo 'no data10 disk'
   fi
-
+  # 有data12盘将软链添加到/data12,否则设置为/logging
   df -Th|grep data12
   if [ $? -eq 0 -a -d /data12 ];then
     link_path='/data12'
   else
     link_path='/logging'
   fi
+  # 清空mq的数据目录  data1 - data11
+  for i in $(seq 1 11);do rm -rf /data$i/message_queue_server/message_data;done
 fi
 
 if [[ ${link_path} != '' ]]; then
@@ -68,10 +71,6 @@ if [[ ${link_path} != '' ]]; then
   else
     ln -snf ${link_path} ${dst_path}
   fi
-fi
-
-if [[ $1 == 'mq' ]]; then
-  for i in $(seq 1 11);do rm -rf /data$i/message_queue_server/message_data;done 
 fi
 
 # 检查ibrs是否关闭，开启会影响性能

@@ -1,5 +1,15 @@
 #!/bin/sh
 
+while :
+do
+#  make opt_test
+ echo hi
+ if [ $? -ne 0 ]; then
+  echo "test failed"
+  break
+ fi
+done
+
 if [[ $1 == 'mq' ]]; then
   grep ip_local_port_range /etc/rc.local
   if [ $? -ne 0 ]; then
