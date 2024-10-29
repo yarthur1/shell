@@ -1,0 +1,39 @@
+#!/usr/bin/expect -f
+# https://blog.csdn.net/qichangjian/article/details/103769468
+
+set jump_machine "11.180.55.1"
+set password "3897716115451461339756004134973P"
+
+set door_machine [lindex $argv 0]
+set server [lindex $argv 1]
+set token [lindex $argv 2]
+
+spawn ssh -o ServerAliveInterval=30 ${door_machine}
+set password "[exec dc -e ${password}]"
+expect {
+    "(yes/no)?" {
+            send "yes\r"
+            exp_continue
+    }
+    "*DomainPassword*" {
+            send "${password}${token}\r"
+            exp_continue
+    }
+    "*DomainPassword*" {
+            send "${password}${token}\r"
+            exp_continue
+    }
+    "*Enter passphrase*" {
+
+    }
+    "*\\$" {}
+}
+
+send "ssh ${jump_machine} \r"
+expect {
+        "*\\$" {}
+}
+send "sudo su serving\r"
+expect "*password*" { send "${password}\r" }
+expect "*\\$" { send "ssh ${server}\r"}
+interact

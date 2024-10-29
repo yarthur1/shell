@@ -1,8 +1,31 @@
-#!/usr/bin/expect
+#!/bin/bash
 
-spawn sudo su - serving
-expect "password for xxx.yxj:"
-send "xxx=\r"
-expect "/home/serving"
-send "ssh 1.9.2.6\r"
-interact
+door_machine="yexijun.yxj@login1.eu13.alibaba.org"
+door_machine="yexijun.yxj@login1.et2.alibaba.org"
+ssh_file=~/.ssh/master-${door_machine}:22
+
+#if [ $# -eq 0 ]; then
+#echo "select server:"
+#serverList=(
+#    "11.9.22.16"
+#)
+#select server in ${serverList[@]}
+#do
+#case $server in
+#    ${serverList[0]})
+#    server="11.9.22.16";;
+#esac
+#    break
+#done
+#else
+#    server=$1
+#fi
+
+server="11.9.22.16"
+
+if [ ! -S "${ssh_file}" ]; then
+    echo "input token:"
+    read token
+fi
+
+./aligo ${door_machine} ${server} ${token}
